@@ -13,12 +13,14 @@ def create_geometry(
         height_scale: float = 1, 
         norm_height: bool = False
         ) -> list[tuple[float]]:
-    height_map = np.array(height_map, dtype=np.float32)
-    min_height = np.min(height_map)
-    height_map -= min_height
-    max_height = np.max(height_map)
-    height_map /= max_height
-    height_map *= height_scale
+    
+    if height_scale != 1:
+        height_map = np.array(height_map, dtype=np.float32)
+        min_height = np.min(height_map)
+        height_map -= min_height
+        max_height = np.max(height_map)
+        height_map /= max_height
+        height_map *= height_scale
 
     if norm_height:
         height_map = normalize(height_map)

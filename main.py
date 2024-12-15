@@ -1,6 +1,8 @@
+import sys
 from pxr import Usd, UsdGeom
 import numpy as np
 from PIL import Image
+from utils.ditches import DitchMap
 
 from utils.exporter import export_geometry
 from utils.geometry import create_geometry
@@ -13,15 +15,18 @@ from utils.geometry import create_geometry
 #     [0, 1, 0, 1, 0],
 #     [0, 0, 0, 0, 0]
 # ]
+np.set_printoptions(threshold=sys.maxsize)
 
-HEIGHT_MAP_NAME = "dessert"
-HEIGHT_MAP_PATH = f"./preprocessed/{HEIGHT_MAP_NAME}.png"
-image = Image.open(HEIGHT_MAP_PATH)
-height_map = np.array(image)
+height_map = DitchMap(max_length=100, max_grad=2, ditches=20).height_map
 
-h_scale = 2048/100.0 * 0.878 #3d print width
+HEIGHT_MAP_NAME = "ditches7"
+# HEIGHT_MAP_PATH = f"./preprocessed/{HEIGHT_MAP_NAME}.png"
+# image = Image.open(HEIGHT_MAP_PATH)
+# height_map = np.array(image)
 
-points, vertex_counts, face_vertex_indices, height_map = create_geometry(height_map, height_scale=h_scale, len_scale=1/4.0)
+# h_scale = 2048/100.0 * 0.878 #3d print width
+
+points, vertex_counts, face_vertex_indices, height_map = create_geometry(height_map)
 output_path = f"{HEIGHT_MAP_NAME}_mesh.usd"
 export_geometry(points, vertex_counts, face_vertex_indices, output_path, smooth=True)
 
