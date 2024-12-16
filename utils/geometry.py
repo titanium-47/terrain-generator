@@ -11,18 +11,21 @@ def create_geometry(
         height_map: list[list[float]], 
         len_scale: float = 1,
         height_scale: float = 1, 
+        zero_height: bool = False,
         norm_height: bool = False
         ) -> list[tuple[float]]:
     
-    if height_scale != 1:
+    if norm_height:
         height_map = np.array(height_map, dtype=np.float32)
         min_height = np.min(height_map)
         height_map -= min_height
         max_height = np.max(height_map)
         height_map /= max_height
         height_map *= height_scale
+    else:
+        height_map = np.array(height_map, dtype=np.float32) * height_scale
 
-    if norm_height:
+    if zero_height:
         height_map = normalize(height_map)
     
     points = []
@@ -32,7 +35,7 @@ def create_geometry(
     for y in range(rows):
         for x in range(cols):
             height = height_map[y, x]
-            points.append((x*len_scale, int(height), y*len_scale))
+            points.append(((x-cols/2)*len_scale, float(height), (y-rows/2)*len_scale))
             if x > 0 and y > 0:
                 idx = len(points) - 1
                 face_vertex_indices.extend([idx, idx-cols, idx-1])

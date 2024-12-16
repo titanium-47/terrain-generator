@@ -17,7 +17,7 @@ class DitchMap:
         lengths = np.random.randint(5, self.max_length+1, self.num_ditches)
         depths = np.random.randint(3, self.max_depth+1, self.num_ditches)
         directions = np.random.randint(0, 8, self.num_ditches)
-        self.grads = 0.2 + (self.max_grad - 0.2) * np.random.rand(self.num_ditches, 10)
+        self.grads = 0.2 + (self.max_grad - 0.2) * np.random.rand(self.num_ditches, 100)
 
         q = deque()
         visited = set()
@@ -58,7 +58,7 @@ class DitchMap:
     def errode(self, q: deque, visited: set):
         while q:
             x, y, d, k = q.popleft()
-            new_height = self.height_map[x, y] + self.grads[d, k%10]
+            new_height = self.height_map[x, y] + self.grads[d, k%100]
             for i in range(-1, 2):
                 for j in range(-1, 2):
                     if (x+i,y+j) in visited or (i == 0 and j == 0):
